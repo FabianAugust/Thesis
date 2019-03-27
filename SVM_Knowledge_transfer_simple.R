@@ -23,17 +23,15 @@ test <- df[rand,]
 train <- df[-rand, ]
 
 # Perform knowledge transfer regressions
-res <- lm(Petal.Length ~ Sepal.Length + Sepal.Width, data = train)
-train$Petal.Length_p <- predict(res)
-
-res <- lm(Petal.Width ~ Sepal.Length + Sepal.Width, data = train)
-train$Petal.Width_p <- predict(res)
-
-res <- lm(Petal.Length ~ Sepal.Length + Sepal.Width, data = test)
-test$Petal.Length_p <- predict(res)
-
-res <- lm(Petal.Width ~ Sepal.Length + Sepal.Width, data = test)
-test$Petal.Width_p <- predict(res)
+res1 <- lm(Petal.Length ~ Sepal.Length + Sepal.Width, data = train)
+train$Petal.Length_p <- predict(res1)
+  
+res2 <- lm(Petal.Width ~ Sepal.Length + Sepal.Width, data = train)
+train$Petal.Width_p <- predict(res2)
+  
+test$Petal.Length_p <- predict(res1, newdata = test)
+  
+test$Petal.Width_p <- predict(res2, newdata = test)
 
 # Create a standard dataset with only decision features and knowledge transfer set with
 # transfered privileged features
@@ -66,17 +64,15 @@ svm_eval <- function(n){
   test <- df[rand,]
   train <- df[-rand, ]
   
-  res <- lm(Petal.Length ~ Sepal.Length + Sepal.Width, data = train)
-  train$Petal.Length_p <- predict(res)
+  res1 <- lm(Petal.Length ~ Sepal.Length + Sepal.Width, data = train)
+  train$Petal.Length_p <- predict(res1)
   
-  res <- lm(Petal.Width ~ Sepal.Length + Sepal.Width, data = train)
-  train$Petal.Width_p <- predict(res)
+  res2 <- lm(Petal.Width ~ Sepal.Length + Sepal.Width, data = train)
+  train$Petal.Width_p <- predict(res2)
   
-  res <- lm(Petal.Length ~ Sepal.Length + Sepal.Width, data = test)
-  test$Petal.Length_p <- predict(res)
+  test$Petal.Length_p <- predict(res1, newdata = test)
   
-  res <- lm(Petal.Width ~ Sepal.Length + Sepal.Width, data = test)
-  test$Petal.Width_p <- predict(res)
+  test$Petal.Width_p <- predict(res2, newdata = test)
   
   
   standard_dat <- train[,c(1,2,5)]
